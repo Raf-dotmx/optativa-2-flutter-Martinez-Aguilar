@@ -3,6 +3,7 @@ import 'package:flutter_examen_2/modules/products/domain/dto/productos.dart';
 import 'package:flutter_examen_2/modules/products/domain/repository/product_repository.dart';
 import 'package:flutter_examen_2/infraestructure/connection/connection.dart';
 import 'package:flutter_examen_2/modules/products/useCase/products_usecase.dart';
+import 'package:flutter_examen_2/router/routers.dart';
 
 class ProductosCategoria extends StatefulWidget {
   final String category;
@@ -45,6 +46,7 @@ class _ProductosCategoriaState extends State<ProductosCategoria> {
 
           final products = snapshot.data!;
 
+          // aqui se construye la lista de productos, las cartas
           return Padding(
             padding: const EdgeInsets.all(8.0),
             child: GridView.builder(
@@ -66,39 +68,55 @@ class _ProductosCategoriaState extends State<ProductosCategoria> {
     );
   }
 
+// aqui se construye la cartas de cada producto
   Widget _buildProductCard(Product product) {
     return Card(
       elevation: 2,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Expanded(
-            child: Image.network(
-              product.thumbnail,
-              fit: BoxFit.cover,
-              width: double.infinity,
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(
-              product.title,
-              style: const TextStyle(fontWeight: FontWeight.bold),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: GestureDetector(
-              onTap: () {
-                // Navigate to the product details page
-              },
-              child: const Text(
-                'Details',
-                style: TextStyle(color: Colors.blue),
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 10.0), 
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Expanded(
+              child: Image.network(
+                product.thumbnail,
+                fit: BoxFit.cover, // para que la imagen se ajuste al tamaño de la caja
+                width: double.infinity, // para que ocupe todo el ancho
               ),
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text( // titulo del producto
+                product.title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 20,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: GestureDetector( // para que se pueda hacer click en el texto
+                onTap: () {
+                  Navigator.pushNamed(
+                    context,
+                    Routers.pantallaDetalleProducto,
+                    arguments: product.id,
+                  );
+                },
+                child: const Text(
+                  'Detalles',
+                  style: TextStyle(
+                    color: Colors.blue,
+                    decoration: TextDecoration.underline,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

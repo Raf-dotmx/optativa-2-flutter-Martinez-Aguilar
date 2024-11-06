@@ -54,7 +54,7 @@ class _CategoryScreenState extends State<CategoriasListado> {
             itemBuilder: (context, index) {
               Category category = categories[index];
 
-              Icon categoryIcon = index % 2 == 0
+              Icon categoryIcon = index % 2 == 0 // aqui se puede cambiar el icono de la categoria y el color
                   ? const Icon(Icons.shopping_bag, color: Colors.blue)
                   : const Icon(Icons.fastfood, color: Colors.red);
 
@@ -63,7 +63,7 @@ class _CategoryScreenState extends State<CategoriasListado> {
                 title: Text(category.name),
                 subtitle: Text(category.slug),
                 trailing: Icon(Icons.arrow_forward_ios,
-                    color: index % 2 == 0 ? Colors.blue : Colors.red),
+                    color: index % 2 == 0 ? Colors.blue : Colors.red), // cambiar el color de la flecha
                 onTap: () {
                   //print("'${category.name}' category selected");
                   Navigator.pushNamed(context, Routers.pantallaProductos,

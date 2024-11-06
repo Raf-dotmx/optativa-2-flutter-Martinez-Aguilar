@@ -9,41 +9,63 @@ class Login extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Login"),
-        centerTitle: true,  
+        centerTitle: true,
       ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Container(
-              width: 300,
-              height: 200,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20.0), //
-                image: const DecorationImage(
-                  image: AssetImage('lib/assets/login.png'),
-                  fit: BoxFit.cover,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Container(
+                width: 300,
+                height: 200,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20.0),
+                  image: const DecorationImage(
+                    image: AssetImage('lib/assets/login.png'),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
-            ),
-            const TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Usuario',
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.0),
+                child: TextField(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Usuario',
+                  ),
+                ),
               ),
-            ),
-            const TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Contraseña',
+              const Padding(
+                padding: EdgeInsets.symmetric(
+                    vertical: 8.0),
+                child: TextField(
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Contraseña',
+                  ),
+                ),
               ),
-            ),
-            ElevatedButton(
+              const SizedBox(height: 16),
+              // cambiar a la pantalla de categorias
+              ElevatedButton(
                 onPressed: () async {
                   Navigator.pushNamed(context, Routers.pantallaCategorias);
                 },
-                child: const Text("Ingresar"))
-          ],
+                // cambiar estilo del boton login
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  minimumSize: const Size(100, 50),
+                ),
+                child: const Text("Ingresar"),
+              ),
+            ],
+          ),
         ),
       ),
     );

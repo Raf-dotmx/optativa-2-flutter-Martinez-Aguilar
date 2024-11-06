@@ -3,7 +3,7 @@ import 'package:flutter_examen_2/modules/categories/domain/dto/category.dart';
 import 'package:flutter_examen_2/modules/categories/domain/repository/category_repository.dart';
 
 
-class GetCategoriesUseCase extends UseCase<List<Category>, void> {
+class GetCategoriesUseCase implements UseCase<List<Category>, void> {
   final CategoryRepository repository;
 
   GetCategoriesUseCase({required this.repository});

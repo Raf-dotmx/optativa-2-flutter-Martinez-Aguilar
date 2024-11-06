@@ -13,6 +13,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData().copyWith(
+        // cambiar el estilow del appbar
         appBarTheme: const AppBarTheme(
             backgroundColor: Colors.blue,
             centerTitle: true,
