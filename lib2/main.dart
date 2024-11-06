@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_examen_2/router/ListRouters.dart';
-import 'package:flutter_examen_2/router/routers.dart';
+import 'router/ListRouters.dart';
+import 'router/routers.dart';
 
 void main() {
   runApp(const MainApp());
 }
+
+// arreglate lib
 
 class MainApp extends StatelessWidget {
   const MainApp({super.key});
@@ -13,6 +15,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData().copyWith(
+        // cambiar el estilow del appbar
         appBarTheme: const AppBarTheme(
             backgroundColor: Colors.blue,
             centerTitle: true,

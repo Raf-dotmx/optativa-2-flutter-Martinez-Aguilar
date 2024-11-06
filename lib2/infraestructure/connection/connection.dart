@@ -1,5 +1,5 @@
 import 'dart:convert';
-import 'package:flutter_examen_2/infraestructure/connection/i_connection.dart';
+import 'i_connection.dart';
 import 'package:http/http.dart' as http;
 
 class Connection implements Iconnection {
