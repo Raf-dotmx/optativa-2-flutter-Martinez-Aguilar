@@ -1,3 +1,3 @@
 abstract class Repository<T, P> {
-  Future<T> execute(P params);
+  Future<P> execute(T params);
 }

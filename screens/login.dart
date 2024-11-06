@@ -9,17 +9,19 @@ class Login extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Login"),
+        centerTitle: true,  
       ),
       body: Center(
         child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: 100,
-              height: 100,
+              width: 300,
+              height: 200,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20.0), //
                 image: const DecorationImage(
-                  image: AssetImage('assets/logo.png'),
+                  image: AssetImage('lib/assets/login.png'),
                   fit: BoxFit.cover,
                 ),
               ),

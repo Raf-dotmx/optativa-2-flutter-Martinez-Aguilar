@@ -13,7 +13,11 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData().copyWith(
-        appBarTheme: const AppBarTheme(backgroundColor: Colors.blue),
+        appBarTheme: const AppBarTheme(
+            backgroundColor: Colors.blue,
+            centerTitle: true,
+            titleTextStyle: TextStyle(color: Colors.white, fontSize: 20)),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       initialRoute: Routers.pantallaLogin,
       routes: Listrouters.listScreens,
