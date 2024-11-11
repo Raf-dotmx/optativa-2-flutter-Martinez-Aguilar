@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_examen_2/screens/carrito.dart';
 import 'routers.dart';
 import '../screens/categorias_listado.dart';
 import '../screens/detallado_producto.dart';
@@ -17,5 +18,6 @@ class Listrouters {
       final id = ModalRoute.of(context)!.settings.arguments as int;
       return DetalladoProducto(productId: id);
     },
+    Routers.pantallaCarrito: (context) => ShoppingCartScreen(),
   };
 }

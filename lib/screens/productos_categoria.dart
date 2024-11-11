@@ -32,6 +32,15 @@ class _ProductosCategoriaState extends State<ProductosCategoria> {
       appBar: AppBar(
         title: const Text('Products'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.shopping_cart),
+            onPressed: () {
+              Navigator.pushNamed(context, Routers.pantallaCarrito);
+            },
+          ),
+        ],
+        
       ),
       body: FutureBuilder<List<Product>>(
         future: _productsFuture,

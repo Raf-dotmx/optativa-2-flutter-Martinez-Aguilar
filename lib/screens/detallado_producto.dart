@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:localstorage/localstorage.dart';
+import 'package:intl/intl.dart';
 import '../modules/product_detail/domain/dto/productDetail.dart';
 import '../modules/product_detail/domain/repository/productDetail_repository.dart';
 import '../modules/product_detail/useCase/productDetail_usecase.dart';
@@ -16,6 +18,8 @@ class DetalladoProducto extends StatefulWidget {
 class _ProductDetailScreenState extends State<DetalladoProducto> {
   late ProductDetailUseCase _productDetailUseCase;
   late Future<ProductDetail> _productDetailFuture;
+  final LocalStorage storage = LocalStorage('cart');
+  final TextEditingController _quantityController = TextEditingController();
 
   @override
   void initState() {
@@ -25,18 +29,82 @@ class _ProductDetailScreenState extends State<DetalladoProducto> {
     _productDetailFuture = _productDetailUseCase.execute(widget.productId);
   }
 
+  void _addToCart(ProductDetail product) async {
+    int quantity = int.tryParse(_quantityController.text) ?? 0;
+
+    if (quantity <= 0) {
+      _showAlert('Pon una cantidad mayor a 0.');
+      return;
+    }
+    if (quantity > product.stock) {
+      _showAlert('Cantidad excede el inventario.');
+      return;
+    }
+
+    await storage.ready;
+    List<dynamic> cart = storage.getItem('cart') ?? [];
+
+    final existingProduct = cart.firstWhere(
+      (item) => item['name'] == product.title,
+      orElse: () => <String,
+          dynamic>{},
+    );
+
+    if (existingProduct.isNotEmpty) {
+      int newQuantity = existingProduct['quantity'] + quantity;
+      if (newQuantity > product.stock) {
+        _showAlert('Inventario excedido.');
+        return;
+      }
+      existingProduct['quantity'] = newQuantity;
+      existingProduct['total'] = newQuantity * product.price;
+    } else {
+      if (cart.length >= 7) {
+        _showAlert('Solo puedes tener 7 diferentes productos.');
+        return;
+      }
+
+      cart.add({
+        'name': product.title,
+        'quantity': quantity,
+        'price': product.price,
+        'total': quantity * product.price,
+        'date': DateFormat('yyyy-MM-dd').format(DateTime.now()),
+        'thumbnail': product.thumbnail,
+      });
+    }
+
+    storage.setItem('cart', cart);
+    _showAlert('Producto añadido.');
+  }
+
+  void _showAlert(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Product Details'),
+        centerTitle: true,
       ),
       body: FutureBuilder<ProductDetail>(
         future: _productDetailFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-                child: CircularProgressIndicator()); // Loading circulo de carga
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else if (!snapshot.hasData) {
@@ -72,11 +140,10 @@ class _ProductDetailScreenState extends State<DetalladoProducto> {
                   ),
                   const SizedBox(height: 16),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment
-                        .spaceBetween, // Alinea los elementos a los extremos
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Price: \$${product.price}',
+                        'Precio: \$${product.price}',
                         style: const TextStyle(fontSize: 16),
                       ),
                       Text(
@@ -86,24 +153,34 @@ class _ProductDetailScreenState extends State<DetalladoProducto> {
                     ],
                   ),
                   const SizedBox(height: 16),
+                  TextField(
+                    controller: _quantityController,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Cantidad',
+                    ),
+                    keyboardType: TextInputType.number,
+                  ),
+                  const SizedBox(height: 16),
                   ElevatedButton(
-                    onPressed: () {},
+                    onPressed: () => _addToCart(product),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue,
                       foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder( // Bordes redondeados
+                      shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(5),
                       ),
                       minimumSize: const Size(80, 40),
                     ),
-                    child: const Row( // esta muy raro como poner un icono a un boton me parece muy exagerado el tener que poner un row
+                    child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(Icons.add),
+                        SizedBox(width: 5),
                         Text('Agregar'),
                       ],
                     ),
-                  )
+                  ),
                 ],
               ),
             ),

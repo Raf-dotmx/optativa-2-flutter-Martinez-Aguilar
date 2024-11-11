@@ -6,4 +6,6 @@ class Routers {
   static const pantallaProductos = "productos";
 
   static const pantallaDetalleProducto = "detalle_producto";
+  
+  static const pantallaCarrito = "carrito";
 }
