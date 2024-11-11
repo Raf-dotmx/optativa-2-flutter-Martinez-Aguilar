@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_examen_2/modules/login/domain/dto/user_credentials.dart';
+import 'package:flutter_examen_2/modules/login/useCase/login_usecase.dart';
 import '../router/routers.dart';
+import 'package:localstorage/localstorage.dart';
 
-class Login extends StatelessWidget {
+class Login extends StatefulWidget {
   const Login({super.key});
+
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  final TextEditingController _controllerUsuario = TextEditingController();
+  final TextEditingController _controllerPassword = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -28,20 +39,22 @@ class Login extends StatelessWidget {
                   ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(vertical: 8.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: TextField(
-                  decoration: InputDecoration(
+                  controller: _controllerUsuario,
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Usuario',
                   ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.symmetric(
-                    vertical: 8.0),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
                 child: TextField(
-                  decoration: InputDecoration(
+                  controller: _controllerPassword,
+                  obscureText: true,
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'Contraseña',
                   ),
@@ -51,7 +64,19 @@ class Login extends StatelessWidget {
               // cambiar a la pantalla de categorias
               ElevatedButton(
                 onPressed: () async {
-                  Navigator.pushNamed(context, Routers.pantallaCategorias);
+                  setState(() {
+                    final LocalStorage storage = LocalStorage('token');
+
+                    final UserCredentials credentials = UserCredentials(
+                      user: _controllerUsuario.text,
+                      password: _controllerPassword.text,
+                    );
+                    
+                    LoginUseCase().execute(credentials).then((response) {
+                      storage.setItem('accessToken', response.accessToken);
+                      Navigator.pushNamed(context, Routers.pantallaCategorias);
+                    });
+                  });
                 },
                 // cambiar estilo del boton login
                 style: ElevatedButton.styleFrom(

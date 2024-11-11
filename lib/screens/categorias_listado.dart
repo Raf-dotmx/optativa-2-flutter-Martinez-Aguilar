@@ -32,6 +32,16 @@ class _CategoryScreenState extends State<CategoriasListado> {
       appBar: AppBar(
         title: const Text('Categories'),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.shopping_cart),
+            onPressed: () {
+              setState(() {
+                Navigator.pushNamed(context, Routers.pantallaCarrito);
+              });
+            },
+          ),
+        ],
       ),
       body: FutureBuilder<List<Category>>(
         future: _categories,
@@ -54,7 +64,8 @@ class _CategoryScreenState extends State<CategoriasListado> {
             itemBuilder: (context, index) {
               Category category = categories[index];
 
-              Icon categoryIcon = index % 2 == 0 // aqui se puede cambiar el icono de la categoria y el color
+              Icon categoryIcon = index % 2 ==
+                      0 // aqui se puede cambiar el icono de la categoria y el color
                   ? const Icon(Icons.shopping_bag, color: Colors.blue)
                   : const Icon(Icons.fastfood, color: Colors.red);
 
@@ -63,7 +74,9 @@ class _CategoryScreenState extends State<CategoriasListado> {
                 title: Text(category.name),
                 subtitle: Text(category.slug),
                 trailing: Icon(Icons.arrow_forward_ios,
-                    color: index % 2 == 0 ? Colors.blue : Colors.red), // cambiar el color de la flecha
+                    color: index % 2 == 0
+                        ? Colors.blue
+                        : Colors.red), // cambiar el color de la flecha
                 onTap: () {
                   //print("'${category.name}' category selected");
                   Navigator.pushNamed(context, Routers.pantallaProductos,

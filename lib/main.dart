@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'router/ListRouters.dart';
 import 'router/routers.dart';
+import 'package:localstorage/localstorage.dart';
 
 void main() {
-  runApp(const MainApp());
+  runApp(MainApp());
 }
 
-// arreglate lib
-
 class MainApp extends StatelessWidget {
-  const MainApp({super.key});
+  MainApp({super.key});
+
+  final LocalStorage storage = LocalStorage('token');
 
   @override
   Widget build(BuildContext context) {
