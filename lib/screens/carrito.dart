@@ -5,6 +5,8 @@ import 'package:flutter_examen_2/modules/cart/useCase/carro_useCase.dart';
 import 'package:flutter_examen_2/screens/detallado_producto.dart';
 
 class ShoppingCartScreen extends StatefulWidget {
+  const ShoppingCartScreen({super.key});
+
   @override
   _ShoppingCartScreenState createState() => _ShoppingCartScreenState();
 }
@@ -32,9 +34,9 @@ class _ShoppingCartScreenState extends State<ShoppingCartScreen> {
   void _removeItem(int index) async {
     final updatedCartItems = await _cartUseCase.removeItem(cartItems, index);
     setState(() {
-      cartItems = updatedCartItems; // Update state with the new cart list
+      cartItems = updatedCartItems;
       totalAmount =
-          _cartUseCase.calculateTotalAmount(cartItems); // Recalculate total
+          _cartUseCase.calculateTotalAmount(cartItems);
     });
   }
 

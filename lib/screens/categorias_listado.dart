@@ -14,6 +14,8 @@ class _CategoryScreenState extends State<CategoriasListado> {
   late GetCategoriesUseCase _getCategoriesUseCase;
   late Future<List<Category>> _categories;
 
+  int _selectedIndex = 0;
+
   @override
   void initState() {
     super.initState();
@@ -26,6 +28,27 @@ class _CategoryScreenState extends State<CategoriasListado> {
     _categories = _getCategoriesUseCase.execute(null);
   }
 
+  /// Handle navigation when a bottom navigation bar item is tapped
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+      switch (index) {
+        case 0:
+          Navigator.pushNamed(context, Routers.pantallaBuscador);
+          break;
+        case 1:
+          Navigator.pushNamed(context, Routers.pantallaCarrito);
+          break;
+        case 2:
+          Navigator.pushNamed(context, Routers.productosVistosPantalla);
+          break;
+        case 3:
+          Navigator.pushNamed(context, Routers.pantallaPerfil);
+          break;
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,9 +59,7 @@ class _CategoryScreenState extends State<CategoriasListado> {
           IconButton(
             icon: const Icon(Icons.shopping_cart),
             onPressed: () {
-              setState(() {
-                Navigator.pushNamed(context, Routers.pantallaCarrito);
-              });
+              Navigator.pushNamed(context, Routers.pantallaCarrito);
             },
           ),
         ],
@@ -78,7 +99,6 @@ class _CategoryScreenState extends State<CategoriasListado> {
                         ? Colors.blue
                         : Colors.red), // cambiar el color de la flecha
                 onTap: () {
-                  //print("'${category.name}' category selected");
                   Navigator.pushNamed(context, Routers.pantallaProductos,
                       arguments: category.slug);
                 },
@@ -86,6 +106,30 @@ class _CategoryScreenState extends State<CategoriasListado> {
             },
           );
         },
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.search),
+            label: 'Buscador',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.shopping_cart),
+            label: 'Carrito',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.history),
+            label: 'Productos vistos',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Perfil',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        selectedItemColor: Colors.blue,
+        unselectedItemColor: Colors.grey,
+        onTap: _onItemTapped,
       ),
     );
   }

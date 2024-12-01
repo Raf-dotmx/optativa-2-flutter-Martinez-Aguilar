@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_examen_2/modules/productviewed/domain/dto/productviewed.dart';
+import 'package:flutter_examen_2/modules/productviewed/domain/repository/productoviewed_repository.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:intl/intl.dart';
 import '../modules/product_detail/domain/dto/productDetail.dart';
@@ -27,7 +29,25 @@ class _ProductDetailScreenState extends State<DetalladoProducto> {
     final productDetailRepository = ProductDetailRepository(Connection());
     _productDetailUseCase = ProductDetailUseCase(productDetailRepository);
     _productDetailFuture = _productDetailUseCase.execute(widget.productId);
+    
+    _trackProductView();
   }
+
+
+  void _trackProductView() async {
+  final repository = ViewedProductsRepository();
+  final product = await _productDetailFuture;
+  final productViewed = ProductViewed(
+    productId: widget.productId,
+    name: product.title,
+    price: product.price,
+    views: 1,
+  );
+
+  await repository.saveProduct(productViewed);
+}
+
+
 
   void _addToCart(ProductDetail product) async {
     int quantity = int.tryParse(_quantityController.text) ?? 0;
@@ -46,8 +66,7 @@ class _ProductDetailScreenState extends State<DetalladoProducto> {
 
     final existingProduct = cart.firstWhere(
       (item) => item['name'] == product.title,
-      orElse: () => <String,
-          dynamic>{},
+      orElse: () => <String, dynamic>{},
     );
 
     if (existingProduct.isNotEmpty) {
@@ -113,7 +132,7 @@ class _ProductDetailScreenState extends State<DetalladoProducto> {
 
           final product = snapshot.data!;
 
-          return Center(
+          return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
@@ -181,6 +200,52 @@ class _ProductDetailScreenState extends State<DetalladoProducto> {
                       ],
                     ),
                   ),
+                  const SizedBox(height: 16),
+                  const Divider(),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Reviews:',
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  if (product.reviews.isEmpty)
+                    const Text('No reviews yet.',
+                        style: TextStyle(fontSize: 16))
+                  else
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: product.reviews.length,
+                      itemBuilder: (context, index) {
+                        final review = product.reviews[index];
+                        return Card(
+                          margin: const EdgeInsets.symmetric(vertical: 8),
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              backgroundColor: Colors.blue,
+                              child: Text(
+                                review.rating.toString(),
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            ),
+                            title: Text(review.reviewerName),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(review.comment),
+                                const SizedBox(height: 4),
+                                Text(
+                                  DateFormat('yyyy-MM-dd')
+                                      .format(DateTime.parse(review.date)),
+                                  style: const TextStyle(
+                                      fontSize: 12, color: Colors.grey),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
                 ],
               ),
             ),
