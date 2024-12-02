@@ -58,14 +58,14 @@ class _ProductSearchScreenState extends State<ProductSearchScreen> {
               decoration: InputDecoration(
                 labelText: 'Buscar',
                 suffixIcon: IconButton(
-                  icon: Icon(Icons.search),
+                  icon: const Icon(Icons.search),
                   onPressed: _searchProducts,
                 ),
               ),
               onSubmitted: (_) => _searchProducts(),
             ),
             const SizedBox(height: 16),
-            if (_isLoading) CircularProgressIndicator(),
+            if (_isLoading) const CircularProgressIndicator(),
             if (_error.isNotEmpty) Text('Error: $_error', style: TextStyle(color: Colors.red)),
             if (!_isLoading && _error.isEmpty)
               Expanded(
